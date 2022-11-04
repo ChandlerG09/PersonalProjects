@@ -50,9 +50,11 @@ def playGame():
         
         print('Creating ' + str(numDecks) + ' deck(s)')
         createDecks(int(numDecks))
-        print('Shuffling the Deck')
+        print('Shuffling the Deck(s)')
         shuffleDeck()
 
+        while(len(deck) != threshold):
+            pass
         
 
 def main():
