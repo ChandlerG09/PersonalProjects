@@ -1,6 +1,7 @@
 from Card import Card
 import random
 import time
+import os
 
 EXIT = 1
 
@@ -137,7 +138,7 @@ def dealerDraw():
 
 def handleChoice():
     resp = askPlayer().lower()
-    print('\n' * 100)
+    os.system('clear')
     if resp.upper() == 'EXIT':
         print('Exiting Game...')
         return EXIT
@@ -158,21 +159,22 @@ def playGame():
     flag = True
 
     while flag:
-        print('\n' *100)
+        os.system('clear')
         print('Welcome to command line BlackJack!\n')
         print('Type EXIT at any point to quit the game\n\n')
         numDecks = input('How many decks of cards would you like to play with? ')
         if numDecks.upper() == 'EXIT':
+            os.system('clear')
             flag = False
             continue
-        print('\n' *100)
+        os.system('clear')
         print('\nCreating ' + str(numDecks) + ' deck(s)')
         createDecks(int(numDecks))
         print('Shuffling the Deck(s)...\n')
         shuffleDeck()
         print('Shuffled')
         time.sleep(1)
-        print('\n' *100)
+        os.system('clear')
         
 
         threshold = 0.75 * len(deck)
@@ -189,14 +191,16 @@ def playGame():
 
             n = handleChoice()
             if n == EXIT:
+                os.system('clear')
                 flag = False
                 break
 
             resp = input('Press enter to start next hand or EXIT to quit: ')
             if resp.upper() == 'EXIT':
+                os.system('clear')
                 flag = False
                 break
-            print('\n' * 100)
+            os.system('clear')
             
             
         
