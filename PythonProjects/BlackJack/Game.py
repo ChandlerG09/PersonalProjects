@@ -1,5 +1,6 @@
 from Card import Card
 import random
+import time
 
 EXIT = 1
 
@@ -76,26 +77,67 @@ def checkSum(tempDeck):
     return sum
 
 def askPlayer():
+    print('Dealer is showing ' + dealerHand[0].strNum)
     return input('\nWhat would you like to do? ')
+
+def discardDecks():
+    playerHand.clear()
+    dealerHand.clear()
 
 def hit():
     drawCard(playerHand)
+    print('Your cards are:')
+    printHand(playerHand)
     if checkSum(playerHand) > 21:
-        print('\nPlayer Busts, Dealer Wins\n\n')
+        print('\nPlayer Busts, Dealer Wins\n')
+        discardDecks()
     else:
         handleChoice()
+
+def softOrHard(tempDeck):
+    pass
+
+def printBoth():
+    print('\nYour sum is: ' + str(checkSum(playerHand)) + ' with cards:')
+    printHand(playerHand)
+    print('\nDealer has sum of ' + str(checkSum(dealerHand)) + ' with cards:')
+    printHand(dealerHand)
+    
+def printHand(tempDeck):
+    cards = []
+    for card in tempDeck:
+        cards.append(card.strNum)
+    
+    print(*cards)
+    return cards
+
+def determineResult(playerSum, dealerSum):
+
+    playerDif = 21 - playerSum
+    dealerDif = 21 - dealerSum
+
+    printBoth()
+
+    if playerDif < dealerDif or dealerSum > 21:
+        print('\nYou won!\n')
+    if playerDif > dealerDif and dealerSum < 21:
+        print('\nDealer won.\n')
+    if playerDif == dealerDif:
+        print('\nYou pushed\n')
+    
+    discardDecks()
 
 def dealerDraw():
     while checkSum(dealerHand) < 17: #Hit until dealer has at least 17
         drawCard(dealerHand)
-        if checkSum(dealerHand) - 1 > 21: #soft 17, hit again
+        if 'Ace' in dealerHand and checkSum(dealerHand) == 17: #soft 17, hit again
+            print('Ace found')
             drawCard(dealerHand)
-
-
+    determineResult(checkSum(playerHand), checkSum(dealerHand))
 
 def handleChoice():
     resp = askPlayer().lower()
-
+    print('\n' * 100)
     if resp.upper() == 'EXIT':
         print('Exiting Game...')
         return EXIT
@@ -107,6 +149,8 @@ def handleChoice():
             hit()
         if resp == 'stay':
             dealerDraw()
+
+    return 0
             
     
 def playGame():
@@ -114,17 +158,22 @@ def playGame():
     flag = True
 
     while flag:
-        print('\n\nWelcome to command line BlackJack!\n')
+        print('\n' *100)
+        print('Welcome to command line BlackJack!\n')
         print('Type EXIT at any point to quit the game\n\n')
         numDecks = input('How many decks of cards would you like to play with? ')
         if numDecks.upper() == 'EXIT':
             flag = False
             continue
-        
-        print('\nCreating ' + str(numDecks) + ' deck(s)\n')
+        print('\n' *100)
+        print('\nCreating ' + str(numDecks) + ' deck(s)')
         createDecks(int(numDecks))
-        print('Shuffling the Deck(s)')
+        print('Shuffling the Deck(s)...\n')
         shuffleDeck()
+        print('Shuffled')
+        time.sleep(1)
+        print('\n' *100)
+        
 
         threshold = 0.75 * len(deck)
 
@@ -135,18 +184,19 @@ def playGame():
         while(len(deck) >= threshold):
             
             drawFirstCards()
-            print('\n\nYour cards are: ')
-            for card in playerHand:
-                printCard(card)
+            print('Your cards are:')
+            printHand(playerHand)
 
-            print('\nDealer is showing ' + str(dealerHand[0].strNum))
-
-            
-            
             n = handleChoice()
             if n == EXIT:
                 flag = False
                 break
+
+            resp = input('Press enter to start next hand or EXIT to quit: ')
+            if resp.upper() == 'EXIT':
+                flag = False
+                break
+            print('\n' * 100)
             
             
         
