@@ -48,6 +48,10 @@ def drawFirstCards():
         playerHand.append(deck.pop(0))
         dealerHand.append(deck.pop(0))
 
+    if checkSum(dealerHand) == 21 and dealerHand[0].strNum == 'Ace':
+        os.system('clear')
+        return 'BJ'
+
 def drawCard(tempDeck):
     tempDeck.append(deck.pop(0))
     return tempDeck
@@ -78,7 +82,7 @@ def checkSum(tempDeck):
     return sum
 
 def askPlayer():
-    print('Dealer is showing ' + dealerHand[0].strNum)
+    print('Dealer is showing\n' + dealerHand[0].strNum)
     return input('\nWhat would you like to do? ')
 
 def discardDecks():
@@ -89,6 +93,7 @@ def hit():
     drawCard(playerHand)
     print('Your cards are:')
     printHand(playerHand)
+    print('')
     if checkSum(playerHand) > 21:
         print('\nPlayer Busts, Dealer Wins\n')
         discardDecks()
@@ -99,7 +104,8 @@ def softOrHard(tempDeck):
     pass
 
 def printBoth():
-    print('\nYour sum is: ' + str(checkSum(playerHand)) + ' with cards:')
+    os.system('clear')
+    print('Your sum is: ' + str(checkSum(playerHand)) + ' with cards:')
     printHand(playerHand)
     print('\nDealer has sum of ' + str(checkSum(dealerHand)) + ' with cards:')
     printHand(dealerHand)
@@ -128,12 +134,34 @@ def determineResult(playerSum, dealerSum):
     
     discardDecks()
 
+def findAces(tempDeck):
+    numAces = 0
+    for card in tempDeck:
+        if card.strNum == 'Ace':
+            numAces += 1
+    return numAces
+
+def findAceIndex(tempDeck):
+    for i in range(len(tempDeck)):
+        if tempDeck[i].strNum == 'Ace':
+            return i
+
+def removeAceAndSum(tempDeck):
+    tmp = tempDeck.copy()
+    tmp.pop(findAceIndex(dealerHand))
+
+    return checkSum(tmp)
+
 def dealerDraw():
     while checkSum(dealerHand) < 17: #Hit until dealer has at least 17
         drawCard(dealerHand)
-        if 'Ace' in dealerHand and checkSum(dealerHand) == 17: #soft 17, hit again
-            print('Ace found')
+        printBoth()
+        if findAces(dealerHand) == 1 and removeAceAndSum(dealerHand) == 6: #soft 17, hit again
+            print('Soft 17 found')
             drawCard(dealerHand)
+            time.sleep(1)
+            printBoth()
+        time.sleep(1)
     determineResult(checkSum(playerHand), checkSum(dealerHand))
 
 def handleChoice():
@@ -177,7 +205,7 @@ def playGame():
         os.system('clear')
         
 
-        threshold = 0.75 * len(deck)
+        threshold = 0.25 * len(deck)
 
         #Remove the top card
         deck.pop(0)
@@ -185,22 +213,37 @@ def playGame():
         #Go through 75% of the shoe to simulate actual play
         while(len(deck) >= threshold):
             
-            drawFirstCards()
-            print('Your cards are:')
-            printHand(playerHand)
+            if drawFirstCards() != 'BJ':
+                print('Your cards are:')
+                printHand(playerHand)
+                print('')
 
-            n = handleChoice()
-            if n == EXIT:
-                os.system('clear')
-                flag = False
-                break
+                n = handleChoice()
+                if n == EXIT:
+                    os.system('clear')
+                    flag = False
+                    break
 
-            resp = input('Press enter to start next hand or EXIT to quit: ')
-            if resp.upper() == 'EXIT':
+                resp = input('Press enter to start next hand or EXIT to quit: ')
+                if resp.upper() == 'EXIT':
+                    os.system('clear')
+                    flag = False
+                    break
                 os.system('clear')
-                flag = False
-                break
-            os.system('clear')
+            else:
+                print('Your cards are:')
+                printHand(playerHand)
+                print('')
+                print("Dealers cards are")
+                printHand(dealerHand)
+                print('\nDealer has BlackJack')
+                discardDecks()
+                resp = input('Press enter to start next hand or EXIT to quit: ')
+                if resp.upper() == 'EXIT':
+                    os.system('clear')
+                    flag = False
+                    break
+                os.system('clear')
             
             
         
