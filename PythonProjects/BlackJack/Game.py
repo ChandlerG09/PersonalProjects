@@ -1,7 +1,11 @@
 from Card import Card
 import random
 
+EXIT = 1
+
 deck = []
+playerHand = []
+dealerHand = []
 
 def createDecks(numDecks):
     i = 0
@@ -37,13 +41,42 @@ def printDeck():
 def shuffleDeck():
     random.shuffle(deck)
 
+def drawFirstCards():
+    for i in range(2):
+        playerHand.append(deck.pop(0))
+        dealerHand.append(deck.pop(0))
+
+def drawCard(tempDeck):
+    tempDeck.append(deck.pop(0))
+    return tempDeck
+
+def printCard(card):
+    print(str(card.value))
+
+def findChoices(val1, val2):
+    choices = ['Hit', 'Stay', 'Double']
+    if val1 == val2:
+        choices.append('Split')
+    pass
+
+def handleChoice(resp):
+    if resp == 'EXIT':
+        print('Exiting Game...')
+        return EXIT
+    
+    if resp not in findChoices(playerHand[0].strNum, playerHand[1].strNum):
+        print('Sorry, you cannot do that action right now')
+    else:
+        pass
+    
 def playGame():
+    
     flag = True
 
     while flag:
         print('Welcome to command line BlackJack!')
         print('Type EXIT at any point to quit the game')
-        numDecks = input('How many decks of cards would you like to play with?')
+        numDecks = input('How many decks of cards would you like to play with? ')
         if numDecks == 'EXIT':
             flag = False
             continue
@@ -53,8 +86,25 @@ def playGame():
         print('Shuffling the Deck(s)')
         shuffleDeck()
 
-        while(len(deck) != threshold):
-            pass
+        threshold = 0.75 * len(deck)
+
+        #Remove the top card
+        deck.pop(0)
+
+        #Go through 75% of the shoe to simulate actual play
+        while(len(deck) >= threshold):
+            
+            drawFirstCards()
+            print('Your cards are: ')
+            for card in playerHand:
+                printCard(card)
+
+            print('Dealer is showing ' + str(dealerHand[0].strNum))
+
+            
+            resp = input('What would you like to do? ')
+            
+            
         
 
 def main():
