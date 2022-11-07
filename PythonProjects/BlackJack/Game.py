@@ -14,7 +14,7 @@ def createDecks(numDecks):
 
     for k in range(numDecks):
         for i in range(4):
-            for j in range(1, 15):
+            for j in range(1, 14):
                 if j <= 10 and j != 1:
                     val = j
                     cardval = str(val)
