@@ -2,9 +2,16 @@ import unittest
 from Card import Card
 import Game
 
-
+cards = []
+cards.append("")
+cards.append(Card(11, 'Ace', "Spade"))
+for i in range(2, 11):
+    cards.append(Card(i, str(i), "Spade"))
+    playerDeck = []
+    dealerDeck = []
 
 class testCode(unittest.TestCase):
+
     def testDeckCreation(self):
         Game.createDecks(1)
         deck = Game.deck
@@ -18,6 +25,61 @@ class testCode(unittest.TestCase):
         
         self.assertEqual(newDeck[-1], expected)
 
+    def testDealerBlackJack(self):
+        Game.discardDecks()
+        Game.deck.clear()
+        Game.dealerHand.append(cards[1]) #Ace
+        Game.dealerHand.append(cards[10]) #10
+        Game.playerHand.append(cards[10]) #10
+        Game.playerHand.append(cards[10]) #10
+
+        self.assertEqual(Game.checkSum(Game.dealerHand), 21)
+
+    def testSoft17(self):
+        Game.discardDecks()
+        Game.deck.clear()
+        Game.dealerHand.append(cards[1])
+        Game.dealerHand.append(cards[6]) #Ace and 6
+        self.assertEqual(Game.checkSum(Game.dealerHand), 17) #Soft 17
+        Game.dealerHand.append(cards[9]) #Draw a 9
+        self.assertEqual(Game.checkSum(Game.dealerHand), 16) #Hard 16
+
+    def testPlayerWins(self):
+        Game.discardDecks()
+        Game.deck.clear()
+        Game.dealerHand.append(cards[9])
+        Game.dealerHand.append(cards[10])
+        Game.playerHand.append(cards[10])
+        Game.playerHand.append(cards[10])
+        self.assertEqual(Game.determineResult(Game.checkSum(Game.playerHand), Game.checkSum(Game.dealerHand)), 1)
+
+    def testDealerWin(self):
+        Game.discardDecks()
+        Game.deck.clear()
+        Game.dealerHand.append(cards[10])
+        Game.dealerHand.append(cards[10])
+        Game.playerHand.append(cards[8])
+        Game.playerHand.append(cards[10])
+        self.assertEqual(Game.determineResult(Game.checkSum(Game.playerHand), Game.checkSum(Game.dealerHand)), 0)
+
+    def testPush(self):
+        Game.discardDecks()
+        Game.deck.clear()
+        Game.dealerHand.append(cards[9])
+        Game.dealerHand.append(cards[8])
+        Game.playerHand.append(cards[7])
+        Game.playerHand.append(cards[10])
+        self.assertEqual(Game.determineResult(Game.checkSum(Game.playerHand), Game.checkSum(Game.dealerHand)), 2)
+
+    def testPlayerBust(self):
+        Game.discardDecks()
+        Game.deck.clear()
+        Game.deck.append(cards[5])
+        Game.dealerHand.append(cards[5])
+        Game.dealerHand.append(cards[5])
+        Game.playerHand.append(cards[10])
+        Game.playerHand.append(cards[10])
+        self.assertEqual(Game.hit(), 0)
 
 if __name__ == '__main__':
     unittest.main()

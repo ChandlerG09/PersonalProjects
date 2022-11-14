@@ -97,6 +97,7 @@ def hit():
     if checkSum(playerHand) > 21:
         print('\nPlayer Busts, Dealer Wins\n')
         discardDecks()
+        return 0
     else:
         handleChoice()
 
@@ -127,10 +128,13 @@ def determineResult(playerSum, dealerSum):
 
     if playerDif < dealerDif or dealerSum > 21:
         print('\nYou won!\n')
+        return 1
     if playerDif > dealerDif and dealerSum < 21:
         print('\nDealer won.\n')
+        return 0
     if playerDif == dealerDif:
         print('\nYou pushed\n')
+        return 2
     
     discardDecks()
 
