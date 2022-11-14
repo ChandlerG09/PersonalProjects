@@ -157,7 +157,7 @@ def removeAceAndSum(tempDeck):
     return checkSum(tmp)
 
 def dealerDraw():
-    while checkSum(dealerHand) < 17: #Hit until dealer has at least 17
+    while checkSum(dealerHand) <= 17: #Hit until dealer has at least 17
         drawCard(dealerHand)
         printBoth()
         if findAces(dealerHand) == 1 and removeAceAndSum(dealerHand) == 6: #soft 17, hit again
