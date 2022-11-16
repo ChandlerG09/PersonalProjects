@@ -81,18 +81,37 @@ class testCode(unittest.TestCase):
         Game.playerHand.append(cards[10])
         self.assertEqual(Game.hit(), 0)
 
-    def testDealerHitsSoft17(self):
+    def testDealerHitsSoft17Gets17(self):
         Game.discardDecks()
         Game.deck.clear()
-        Game.deck.append(cards[1]) #Ace
+        Game.deck.append(cards[10]) #10
+        Game.deck.append(cards[10]) #10
+
         Game.dealerHand.append(cards[1]) #Ace
         Game.dealerHand.append(cards[6]) #6
+
         Game.playerHand.append(cards[9]) #9
         Game.playerHand.append(cards[8]) #8
 
         Game.dealerDraw() #Dealer should draw the Ace
 
-        self.assertEqual(Game.checkSum(Game.dealerHand), 18) #Sum should be 18 after hitting soft 17
+        self.assertEqual(Game.checkSum(Game.dealerHand), 17) #Sum should be 17 after hitting soft 17
+
+    def testDealerHitsSoft17GetsAce(self):
+        Game.discardDecks()
+        Game.deck.clear()
+        Game.deck.append(cards[1]) #10
+        Game.deck.append(cards[10]) #10
+
+        Game.dealerHand.append(cards[1]) #Ace
+        Game.dealerHand.append(cards[6]) #6
+
+        Game.playerHand.append(cards[9]) #9
+        Game.playerHand.append(cards[8]) #8
+
+        Game.dealerDraw() #Dealer should draw the Ace
+
+        self.assertEqual(Game.checkSum(Game.dealerHand), 18) #Sum should be 17 after hitting soft 17
 
     def testMultipleAces(self):
         Game.discardDecks()

@@ -44,11 +44,12 @@ def shuffleDeck():
     random.shuffle(deck)
 
 def drawFirstCards():
+    discardDecks()
     for i in range(2):
         playerHand.append(deck.pop(0))
         dealerHand.append(deck.pop(0))
 
-    if checkSum(dealerHand) == 21 and dealerHand[0].strNum == 'Ace':
+    if checkSum(dealerHand) == 21:
         os.system('clear')
         return 'BJ'
 
@@ -158,15 +159,32 @@ def removeAceAndSum(tempDeck):
 
 def dealerDraw():
     while checkSum(dealerHand) <= 17: #Hit until dealer has at least 17
-        drawCard(dealerHand)
-        printBoth()
         if findAces(dealerHand) == 1 and removeAceAndSum(dealerHand) == 6: #soft 17, hit again
             print('Soft 17 found')
             drawCard(dealerHand)
             time.sleep(1)
             printBoth()
-        time.sleep(1)
+            continue
+        if checkSum(dealerHand) < 17:
+            drawCard(dealerHand)
+            printBoth()
+            time.sleep(1)
+        else:
+            break
     determineResult(checkSum(playerHand), checkSum(dealerHand))
+
+def split():
+    pass
+
+def double():
+    drawCard(playerHand)
+    print('Your cards are:')
+    printHand(playerHand)
+    print('')
+    if checkSum(playerHand) > 21:
+        print('\nPlayer Busts, Dealer Wins\n')
+        discardDecks()
+        return 0
 
 def handleChoice():
     resp = askPlayer().lower()
@@ -177,11 +195,16 @@ def handleChoice():
     
     if resp not in findChoices(playerHand[0].strNum, playerHand[1].strNum):
         print('Sorry, you cannot do that action right now')
+        handleChoice()
     else:
         if resp == 'hit':
             hit()
         if resp == 'stay':
             dealerDraw()
+        if resp == "split":
+            split()
+        if resp == "double":
+            double()
 
     return 0
             
