@@ -64,9 +64,12 @@ def printCard(card):
     print(str(card.strNum))
 
 def findChoices(val1, val2):
-    choices = ['hit', 'stay', 'double']
-    if val1 == val2:
-        choices.append('split')
+    if len(playerHand) == 2: #Players initial decision
+        choices = ['hit', 'stay', 'double'] 
+        if val1 == val2:
+            choices.append('split')
+    else: #Player already hit or split
+        choices = ['hit', 'stay']
     return choices
 
 def checkSum(tempDeck):
@@ -95,7 +98,7 @@ def discardDecks():
 
 def hit():
     drawCard(playerHand)
-    print('Your cards are:')
+    print('Your cards are:' + '(' + str(checkSum(playerHand)) + ')')
     printHand(playerHand)
     print('')
     if checkSum(playerHand) > 21:
@@ -177,6 +180,8 @@ def split():
     pass
 
 def double():
+    print('Doubling Down...')
+    time.sleep(1)
     drawCard(playerHand)
     print('Your cards are:')
     printHand(playerHand)
@@ -184,6 +189,7 @@ def double():
     if checkSum(playerHand) > 21:
         print('\nPlayer Busts, Dealer Wins\n')
         return DEALERWIN
+    dealerDraw()
 
 def handleChoice():
     resp = askPlayer().lower()
@@ -240,7 +246,7 @@ def playGame():
         while(len(deck) >= threshold):
             
             if drawFirstCards() != 'BJ':
-                print('Your cards are:')
+                print('Your cards are:' + ' (' + str(checkSum(playerHand)) + ')')
                 printHand(playerHand)
                 print('')
 
@@ -257,7 +263,7 @@ def playGame():
                     break
                 os.system('clear')
             else:
-                print('Your cards are:')
+                print('Your cards are:' + '(' + str(checkSum(playerHand) + ')'))
                 printHand(playerHand)
                 print('')
                 print("Dealers cards are")
