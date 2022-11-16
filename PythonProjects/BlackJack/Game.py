@@ -3,7 +3,10 @@ import random
 import time
 import os
 
-EXIT = 1
+EXIT = -1
+PLAYERWIN = 1
+DEALERWIN = 2
+PUSH = 3
 
 deck = []
 playerHand = []
@@ -51,7 +54,7 @@ def drawFirstCards():
 
     if checkSum(dealerHand) == 21:
         os.system('clear')
-        return 'BJ'
+        return DEALERWIN
 
 def drawCard(tempDeck):
     tempDeck.append(deck.pop(0))
@@ -97,8 +100,7 @@ def hit():
     print('')
     if checkSum(playerHand) > 21:
         print('\nPlayer Busts, Dealer Wins\n')
-        discardDecks()
-        return 0
+        return DEALERWIN
     else:
         handleChoice()
 
@@ -129,15 +131,13 @@ def determineResult(playerSum, dealerSum):
 
     if playerDif < dealerDif or dealerSum > 21:
         print('\nYou won!\n')
-        return 1
+        return PLAYERWIN
     if playerDif > dealerDif and dealerSum < 21:
         print('\nDealer won.\n')
-        return 0
+        return DEALERWIN
     if playerDif == dealerDif:
         print('\nYou pushed\n')
-        return 2
-    
-    discardDecks()
+        return PUSH
 
 def findAces(tempDeck):
     numAces = 0
@@ -183,8 +183,7 @@ def double():
     print('')
     if checkSum(playerHand) > 21:
         print('\nPlayer Busts, Dealer Wins\n')
-        discardDecks()
-        return 0
+        return DEALERWIN
 
 def handleChoice():
     resp = askPlayer().lower()
@@ -264,7 +263,7 @@ def playGame():
                 print("Dealers cards are")
                 printHand(dealerHand)
                 print('\nDealer has BlackJack')
-                discardDecks()
+                #discardDecks()
                 resp = input('Press enter to start next hand or EXIT to quit: ')
                 if resp.upper() == 'EXIT':
                     os.system('clear')

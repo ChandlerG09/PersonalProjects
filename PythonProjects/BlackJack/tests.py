@@ -60,7 +60,7 @@ class testCode(unittest.TestCase):
         Game.dealerHand.append(cards[10])
         Game.playerHand.append(cards[8])
         Game.playerHand.append(cards[10])
-        self.assertEqual(Game.determineResult(Game.checkSum(Game.playerHand), Game.checkSum(Game.dealerHand)), 0)
+        self.assertEqual(Game.determineResult(Game.checkSum(Game.playerHand), Game.checkSum(Game.dealerHand)), Game.DEALERWIN)
 
     def testPush(self):
         Game.discardDecks()
@@ -69,7 +69,7 @@ class testCode(unittest.TestCase):
         Game.dealerHand.append(cards[8])
         Game.playerHand.append(cards[7])
         Game.playerHand.append(cards[10])
-        self.assertEqual(Game.determineResult(Game.checkSum(Game.playerHand), Game.checkSum(Game.dealerHand)), 2)
+        self.assertEqual(Game.determineResult(Game.checkSum(Game.playerHand), Game.checkSum(Game.dealerHand)), Game.PUSH)
 
     def testPlayerBust(self):
         Game.discardDecks()
@@ -79,7 +79,7 @@ class testCode(unittest.TestCase):
         Game.dealerHand.append(cards[5])
         Game.playerHand.append(cards[10])
         Game.playerHand.append(cards[10])
-        self.assertEqual(Game.hit(), 0)
+        self.assertEqual(Game.hit(), Game.DEALERWIN)
 
     def testDealerHitsSoft17Gets17(self):
         Game.discardDecks()
