@@ -2,6 +2,7 @@ from Card import Card
 import random
 import time
 import os
+import pygame
 
 EXIT = -1
 PLAYERWIN = 1
@@ -10,6 +11,7 @@ PUSH = 3
 
 deck = []
 playerHand = []
+playerSplitHand = []
 dealerHand = []
 
 def createDecks(numDecks):
@@ -177,7 +179,9 @@ def dealerDraw():
     determineResult(checkSum(playerHand), checkSum(dealerHand))
 
 def split():
-    pass
+    playerSplitHand.append(playerHand.pop(1)) #put the second card onto the new split deck
+    drawCard(playerHand)
+    drawCard(playerSplitHand)
 
 def double():
     print('Doubling Down...')
