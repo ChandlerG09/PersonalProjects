@@ -13,33 +13,44 @@ class FindNumConnectedSinks:
         source = self.FindSourcePosition()
         self.NavigatePipes(int(source[1]), int(source[2]))
 
-        return self.ConnectedSinks
+        self.ConnectedSinks.sort()
+
+        return ''.join(self.ConnectedSinks)
 
     #Recursive Function to search through the pipes for sinks connected
     def NavigatePipes(self, x, y):
 
         char = self.FindValueBasedOnPosition(x, y)[0]
         
+        #Keep track of visited nodes to avoid cycles
         self.visitedIndexes.append((x,y))
 
-        #Move .Up
-        if(y > 0 and 'up' in self.DetermineDirections(char) and (x,y+1) not in self.visitedIndexes and
-           self.FindValueBasedOnPosition(x,y+1) != []):
+        #Move Up
+        if(y > 0 and 'up' in self.DetermineDirections(char) 
+           and (x,y+1) not in self.visitedIndexes 
+           and self.FindValueBasedOnPosition(x,y+1) != []
+           and 'down' in self.DetermineDirections(self.FindValueBasedOnPosition(x,y+1)[0])):
             self.NavigatePipes(x, y+1)
         #Move Right
-        if('right' in self.DetermineDirections(char) and (x+1,y) not in self.visitedIndexes
-           and self.FindValueBasedOnPosition(x+1,y) != []):
+        if('right' in self.DetermineDirections(char) 
+           and (x+1,y) not in self.visitedIndexes
+           and self.FindValueBasedOnPosition(x+1,y) != []
+           and 'left' in self.DetermineDirections(self.FindValueBasedOnPosition(x+1,y)[0])):
             self.NavigatePipes(x+1, y)
         #Move Left
-        if(x > 0 and 'left' in self.DetermineDirections(char) and (x-1,y) not in self.visitedIndexes
-           and self.FindValueBasedOnPosition(x-1,y) != []):
+        if(x > 0 and 'left' in self.DetermineDirections(char) 
+           and (x-1,y) not in self.visitedIndexes
+           and self.FindValueBasedOnPosition(x-1,y) != []
+           and 'right' in self.DetermineDirections(self.FindValueBasedOnPosition(x-1,y)[0])):
             self.NavigatePipes(x-1, y)
         #Move Down  
-        if('down' in self.DetermineDirections(char) and (x,y-1) not in self.visitedIndexes
-           and self.FindValueBasedOnPosition(x,y-1) != []):
+        if('down' in self.DetermineDirections(char) 
+           and (x,y-1) not in self.visitedIndexes
+           and self.FindValueBasedOnPosition(x,y-1) != []
+           and 'up' in self.DetermineDirections(self.FindValueBasedOnPosition(x,y-1)[0])):
             self.NavigatePipes(x, y-1)
 
-        
+        #Check if it is a sink
         if(str.isupper(char)):
             self.ConnectedSinks.append(char)
 
@@ -78,5 +89,5 @@ class FindNumConnectedSinks:
 
 if __name__ == '__main__':
 
-    print(FindNumConnectedSinks().FindNumConnectedSinks('/Users/chandlerglowicki/Development/coding_qual_input.txt'))
+    print(FindNumConnectedSinks().FindNumConnectedSinks('/Users/chandlerglowicki/Development/PersonalProjects/PythonProjects/coding_qual_input.txt'))
     print('Done')
